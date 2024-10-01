@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de Música</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/550x/ba/a1/ab/baa1ab0b3ef9720fde237b47ad2b770b.jpg') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            justify-content: space-between;
+            color: white;
+        }
+
+        #music-player {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #song-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        #audio-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 0, 0, 0.7); /* Color del botón */
+            color: white;
+            margin: 0 5px;
+        }
+
+        #add-music {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #music-list {
+            width: 30%;
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px); /* Efecto de desenfoque */
+            overflow-y: auto;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Línea separadora */
+            cursor: pointer;
+        }
+
+        li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="music-player">
+            <div id="song-title">Título de la Canción</div>
+            <audio id="audio-player" controls style="width: 80%;"></audio>
+            <div id="audio-controls">
+                <button id="prev">⏮️ Atrás</button>
+                <button id="play-pause">⏯️ Play/Pause</button>
+                <button id="next">⏭️ Adelante</button>
+            </div>
+            <button id="add-music">Añadir Música</button>
+            <input type="file" id="music-file" accept="audio/*" multiple>
+        </div>
+        <div id="music-list">
+            <h2>Música Seleccionada</h2>
+            <ul id="selected-music"></ul>
+        </div>
+    </div>
+
+    <script>
+        const audioPlayer = document.getElementById('audio-player');
+        const songTitle = document.getElementById('song-title');
+        const musicInput = document.getElementById('music-file');
+        let musicList = [];
+        let currentTrack = 0;
+
+        // Función para reproducir música
+        function playMusic(index) {
+            if (musicList.length > 0) {
+                audioPlayer.src = URL.createObjectURL(musicList[index]);
+                audioPlayer.play();
+                songTitle.textContent = "Reproduciendo: " + musicList[index].name;
+            }
+        }
+
+        // Evento para abrir la biblioteca de archivos
+        document.getElementById('add-music').addEventListener('click', function() {
+            musicInput.click(); // Abre el diálogo para seleccionar archivos
+        });
+
+        // Evento cuando se seleccionan archivos de música
+        musicInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+            const selectedMusicList = document.getElementById('selected-music');
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                musicList.push(file);
+
+                // Añade la canción a la lista visual
+                const newMusicItem = document.createElement('li');
+                newMusicItem.textContent = file.name;
+                selectedMusicList.appendChild(newMusicItem);
+
+                // Asigna evento para reproducir la canción seleccionada
+                newMusicItem.addEventListener('click', function() {
+                    currentTrack = musicList.indexOf(file);
+                    playMusic(currentTrack);
+                });
+            }
+
+            // Reproduce automáticamente la primera canción seleccionada
+            if (musicList.length > 0) {
+                playMusic(currentTrack);
+            }
+        });
+
+        // Botón de Play/Pause
+        document.getElementById('play-pause').addEventListener('click', function() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
+        });
+
+        // Botón de Adelante
+        document.getElementById('next').addEventListener('click', function() {
+            if (currentTrack < musicList.length - 1) {
+                currentTrack++;
+                playMusic(currentTrack);
+            }
+        });
+
+        // Botón de Atrás
+        document.getElementById('prev').addEventListener('click', function() {
+            if (currentTrack > 0) {
+                currentTrack--;
+                playMusic(currentTrack);
+            }
+        });
+    </script>
+</body>
+</html>
