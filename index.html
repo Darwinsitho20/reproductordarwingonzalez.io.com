@@ -180,6 +180,14 @@
                 playMusic(currentTrack);
             }
         });
+
+        // Reproducir la siguiente canción automáticamente cuando la actual termine
+        audioPlayer.addEventListener('ended', function() {
+            if (currentTrack < musicList.length - 1) {
+                currentTrack++;
+                playMusic(currentTrack);
+            }
+        });
     </script>
 </body>
 </html>
