@@ -8,7 +8,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: url('https://i.pinimg.com/550x/ba/a1/ab/baa1ab0b3ef9720fde237b47ad2b770b.jpg') no-repeat center center fixed;
+            background: url('https://www.nus.agency/wp-content/uploads/2023/03/musica-arte-scaled.jpg') no-repeat center center fixed;
             background-size: cover;
             overflow: hidden;
         }
@@ -33,6 +33,7 @@
         #song-title {
             font-size: 24px;
             margin-bottom: 10px;
+            text-align: center;
         }
 
         #audio-controls {
@@ -86,6 +87,31 @@
 
         input[type="file"] {
             display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            #music-list {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            #music-player {
+                width: 100%;
+            }
+            
+            button {
+                width: 30%;
+                font-size: 14px;
+            }
+            
+            #add-music {
+                width: 80%;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
